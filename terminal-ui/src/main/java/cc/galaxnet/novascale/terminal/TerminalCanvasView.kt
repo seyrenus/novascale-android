@@ -20,6 +20,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.hardware.input.InputManager
+import android.os.Build
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.InputType
@@ -908,8 +909,9 @@ class TerminalCanvasView @JvmOverloads constructor(
             .asSequence()
             .mapNotNull(inputManager::getInputDevice)
             .any { device ->
+                // API 28 cannot distinguish external keyboards; any physical one suffices.
                 !device.isVirtual &&
-                    device.isExternal &&
+                    (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || device.isExternal) &&
                     device.keyboardType == InputDevice.KEYBOARD_TYPE_ALPHABETIC &&
                     device.supportsSource(InputDevice.SOURCE_KEYBOARD)
             }
