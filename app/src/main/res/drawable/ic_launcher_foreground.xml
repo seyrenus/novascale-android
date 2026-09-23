@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NovaScale browser + terminal, redrawn as native layered vectors.
+     Keep important artwork inside the adaptive icon's central safe circle.
+     SPDX-License-Identifier: GPL-3.0-only -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Soft stepped shadows belong to the foreground, so they move with it. -->
+    <path android:pathData="M48,31H71Q76,31 76,36V59Q76,64 71,64H48Q43,64 43,59V36Q43,31 48,31Z"
+        android:fillColor="#180B275A" android:strokeColor="#140B275A" android:strokeWidth="5" />
+    <path android:pathData="M48,29H71Q76,29 76,34V57Q76,62 71,62H48Q43,62 43,57V34Q43,29 48,29Z"
+        android:strokeWidth="2.2">
+        <aapt:attr name="android:fillColor">
+            <gradient android:startX="45" android:startY="29" android:endX="71" android:endY="64" android:type="linear"
+                android:startColor="#99CBF1FF" android:endColor="#505C93DE" />
+        </aapt:attr>
+        <aapt:attr name="android:strokeColor">
+            <gradient android:startX="48" android:startY="29" android:endX="69" android:endY="62" android:type="linear"
+                android:startColor="#FFFFFF" android:endColor="#B5DCFF" />
+        </aapt:attr>
+    </path>
+    <path android:pathData="M44,38H75" android:strokeColor="#E3F7FF" android:strokeWidth="1.8" />
+    <path android:pathData="M49,33.5H64" android:strokeColor="#FFFFFF" android:strokeWidth="2.4" android:strokeLineCap="round" />
+    <path android:pathData="M69,33.5h0.01" android:strokeColor="#FFFFFF" android:strokeWidth="2.6" android:strokeLineCap="round" />
+    <path android:pathData="M35,49H58Q63,49 63,54V76Q63,81 58,81H35Q30,81 30,76V54Q30,49 35,49Z"
+        android:fillColor="#24071D4F" android:strokeColor="#18071D4F" android:strokeWidth="5" />
+    <path android:pathData="M35,46H58Q63,46 63,51V73Q63,78 58,78H35Q30,78 30,73V51Q30,46 35,46Z"
+        android:strokeWidth="2.4">
+        <aapt:attr name="android:fillColor">
+            <gradient android:startX="32" android:startY="46" android:endX="62" android:endY="81" android:type="linear">
+                <item android:offset="0" android:color="#ED9BDEFF" />
+                <item android:offset="0.4" android:color="#F057ABEF" />
+                <item android:offset="1" android:color="#FA3C75CE" />
+            </gradient>
+        </aapt:attr>
+        <aapt:attr name="android:strokeColor">
+            <gradient android:startX="34" android:startY="46" android:endX="58" android:endY="78" android:type="linear"
+                android:startColor="#FFFFFF" android:endColor="#C0E7FF" />
+        </aapt:attr>
+    </path>
+    <!-- Inset highlight and raised prompt retain legibility at launcher sizes. -->
+    <path android:pathData="M35,49H57" android:strokeColor="#60FFFFFF" android:strokeWidth="0.8" android:strokeLineCap="round" />
+    <path android:pathData="M37.5,57.5L44,63L37.5,68.5M48.5,68.5H55"
+        android:strokeColor="#30203C7B" android:strokeWidth="3.4" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path android:pathData="M37.5,56L44,61.5L37.5,67M48.5,67H55"
+        android:strokeColor="#FFFFFF" android:strokeWidth="3" android:strokeLineCap="round" android:strokeLineJoin="round" />
+</vector>

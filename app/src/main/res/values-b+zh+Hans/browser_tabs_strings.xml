@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="browser_new_tab">新建标签页</string>
+    <string name="app_language">应用语言</string>
+    <string name="language_system">跟随系统</string>
+    <string name="browser_close_tab">关闭标签页</string>
+    <string name="section_misc">其他</string>
+    <plurals name="browser_tab_count">
+        <item quantity="one">%1$d 个标签页</item>
+        <item quantity="other">%1$d 个标签页</item>
+    </plurals>
+    <string name="browser_show_app_navigation">显示应用导航栏</string>
+    <string name="browser_hide_app_navigation">隐藏应用导航栏</string>
+</resources>

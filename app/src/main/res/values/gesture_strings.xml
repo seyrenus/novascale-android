@@ -1,0 +1,12 @@
+<resources>
+    <string name="terminal_gestures">Terminal gestures</string>
+    <string name="terminal_gestures_summary">Touch, mouse, selection, and zoom</string>
+    <string name="gestures_modes">Mouse reporting activates automatically when the remote application requests it. For tmux, enable “set -g mouse on”.</string>
+    <string name="gestures_tap">Tap: focus the terminal and show the keyboard. In mouse-aware apps, also send a left click at the touched cell.</string>
+    <string name="gestures_swipe">Swipe up or down: scroll the remote app using mouse-wheel events. When mouse reporting is off, scroll terminal history.</string>
+    <string name="gestures_drag">Touch and hold, then drag: hold the left mouse button to drag or select inside the remote app. Lift your finger to release.</string>
+    <string name="gestures_selection">Double tap: select a word locally and open the Android copy menu. When mouse reporting is off, long press also selects text.</string>
+    <string name="gestures_pinch">Pinch: change terminal font size. Pinching ends any active mouse drag.</string>
+    <string name="gestures_mouse">External mouse: left/middle/right buttons, wheel, and application-requested motion reporting. Hold Shift to use local scrolling and selection instead.</string>
+    <string name="gestures_secondary">Two-finger tap or hold: right-click. Keep both fingers held for menus such as tmux that close on release; use the keyboard to choose an item, then lift your fingers.</string>
+</resources>

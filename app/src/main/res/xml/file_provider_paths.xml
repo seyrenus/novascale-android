@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Only completed, user-requested SFTP previews can be granted to another app. -->
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <cache-path
+        name="sftp_previews"
+        path="sftp-previews/" />
+</paths>

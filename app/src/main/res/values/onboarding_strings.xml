@@ -1,0 +1,29 @@
+<resources>
+    <string name="browser_clear_address">Clear</string>
+    <string name="home_sessions">Sessions</string>
+    <string name="home_tailnet_info">Tailnet details: %1$s</string>
+    <string name="home_login_description">Sign in to discover your devices and open terminals, files, and web services across your tailnet.</string>
+    <string name="onboard_network_title">Tailscale, built right in</string>
+    <string name="onboard_network_body">NovaScale connects to your tailnet from inside the app—no separate Tailscale app required. SSH, SFTP, and the browser share this connection. Use Tailscale or your own control server.</string>
+    <string name="onboard_tools_title">A terminal that responds to touch</string>
+    <string name="onboard_tools_body">Use touch gestures as mouse input in mouse-aware apps such as herdr and the tmux terminal multiplexer. Tap, scroll, and drag from your phone. Keep SSH sessions in the Sessions tab and manage files with SFTP.</string>
+    <string name="onboard_browser_title">Your services, a tap away</string>
+    <string name="onboard_browser_body">Preview a project, open Grafana, or watch Jellyfin in the tabbed browser. Switch back to your terminal while keeping your pages ready.</string>
+    <string name="onboard_next">Next</string>
+    <string name="onboard_back">Back</string>
+    <string name="onboard_start">Get started</string>
+    <string name="onboard_save_error">Could not save setup. Please try again.</string>
+    <plurals name="home_online_nodes">
+        <item quantity="one">Online: %1$d Node</item>
+        <item quantity="other">Online: %1$d Nodes</item>
+    </plurals>
+    <string name="section_debug">Debug</string>
+    <string name="debug_replay_onboarding">Replay onboarding</string>
+    <string name="debug_replay_description">Preview the introduction without resetting your sessions.</string>
+    <string name="web_quick_ports">Quick ports</string>
+    <string name="web_open_browser">Open in browser</string>
+    <string name="tailnet_checking_session">Restoring the connection and checking sign-in status…</string>
+    <string name="section_apple_version">NovaScale for Apple</string>
+    <string name="apple_version_link">View on the App Store</string>
+    <string name="apple_version_description">Explore NovaScale for your Apple devices.</string>
+</resources>

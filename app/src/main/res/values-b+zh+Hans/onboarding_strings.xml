@@ -1,0 +1,29 @@
+<resources>
+    <string name="browser_clear_address">清空</string>
+    <string name="home_sessions">会话</string>
+    <string name="home_tailnet_info">Tailnet 详情：%1$s</string>
+    <string name="home_login_description">登录以发现您的设备，并访问 Tailnet 中的终端、文件和 Web 服务。</string>
+    <string name="onboard_network_title">内置 Tailscale 连接</string>
+    <string name="onboard_network_body">NovaScale 可直接在应用内连接您的 Tailnet，无需另装 Tailscale 应用。SSH、SFTP 和浏览器共享此连接，支持 Tailscale 或自定义控制服务器。</string>
+    <string name="onboard_tools_title">让终端响应触控</string>
+    <string name="onboard_tools_body">通过触控手势操作支持鼠标的应用，如 herdr 和终端复用器 tmux。在手机上点击、滚动和拖动；在「会话」标签页保留 SSH 会话，并通过 SFTP 管理文件。</string>
+    <string name="onboard_browser_title">轻触即可访问您的服务</string>
+    <string name="onboard_browser_body">在多标签浏览器中预览项目、打开 Grafana 或观看 Jellyfin。切回终端时，网页仍为您保留。</string>
+    <string name="onboard_next">下一步</string>
+    <string name="onboard_back">上一步</string>
+    <string name="onboard_start">开始使用</string>
+    <string name="onboard_save_error">无法保存设置，请重试。</string>
+    <plurals name="home_online_nodes">
+        <item quantity="one">在线：%1$d 个节点</item>
+        <item quantity="other">在线：%1$d 个节点</item>
+    </plurals>
+    <string name="section_debug">调试</string>
+    <string name="debug_replay_onboarding">重新查看引导</string>
+    <string name="debug_replay_description">预览介绍，不重置会话。</string>
+    <string name="web_quick_ports">常用端口</string>
+    <string name="web_open_browser">在浏览器中打开</string>
+    <string name="tailnet_checking_session">正在恢复连接并检查登录状态…</string>
+    <string name="section_apple_version">Apple 版 NovaScale</string>
+    <string name="apple_version_link">在 App Store 查看</string>
+    <string name="apple_version_description">探索适用于 Apple 设备的 NovaScale。</string>
+</resources>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="terminal_gestures">終端手勢</string>
+    <string name="terminal_gestures_summary">觸控、滑鼠、選取和縮放</string>
+    <string name="gestures_modes">遠端應用程式要求滑鼠回報時自動啟用。在 tmux 中使用「set -g mouse on」開啟。</string>
+    <string name="gestures_tap">輕點：聚焦終端並顯示鍵盤。在支援滑鼠的應用程式中，同時於觸點所在字元格傳送左鍵點擊。</string>
+    <string name="gestures_swipe">上下滑動：向遠端應用程式傳送滑鼠滾輪事件。關閉滑鼠回報時，捲動終端歷史。</string>
+    <string name="gestures_drag">按住後拖曳：按住滑鼠左鍵，在遠端應用程式中拖曳或選取。抬起手指即放開。</string>
+    <string name="gestures_selection">點兩下：在本機選取單字並開啟 Android 複製選單。關閉滑鼠回報時，長按也可選取文字。</string>
+    <string name="gestures_pinch">雙指捏合：調整終端字級，並結束進行中的滑鼠拖曳。</string>
+    <string name="gestures_mouse">外接滑鼠：支援左鍵、中鍵、右鍵、滾輪及應用程式要求的移動回報。按住 Shift 可改為本機捲動和選取。</string>
+    <string name="gestures_secondary">雙指輕點或按住：滑鼠右鍵。對於放開即關閉的選單（如 tmux），保持雙指按住，透過鍵盤選取選單項目，然後抬起手指。</string>
+</resources>

@@ -1,0 +1,19 @@
+<resources>
+    <string name="host_web_access">網頁存取</string>
+    <string name="host_diagnostics">網路診斷</string>
+    <string name="browser_address">網址</string>
+    <string name="browser_ready">準備瀏覽</string>
+    <string name="browser_welcome">存取 Tailnet 或網際網路上的面板、服務和網站。輸入地址，然後點選前往。</string>
+    <string name="browser_https">HTTPS 連線</string>
+    <string name="browser_http">HTTP 連線</string>
+    <string name="browser_edit_address">編輯地址</string>
+    <string name="browser_forward">前進</string>
+    <string name="browser_start_page">起始頁</string>
+    <string name="browser_actions">瀏覽器操作</string>
+    <string name="browser_copy_link">複製連結</string>
+    <string name="browser_share">分享連結</string>
+    <string name="browser_mobile">要求行動版網站</string>
+    <string name="browser_desktop">要求桌面版網站</string>
+    <string name="browser_close">關閉頁面</string>
+    <string name="browser_exit_video">離開全螢幕影片</string>
+</resources>

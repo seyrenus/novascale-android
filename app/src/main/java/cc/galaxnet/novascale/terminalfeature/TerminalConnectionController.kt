@@ -1,0 +1,280 @@
+/*
+ * NovaScale for Android
+ * Copyright (C) 2026 NovaScale contributors
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
+package cc.galaxnet.novascale.terminalfeature
+
+import android.content.Context
+import cc.galaxnet.novascale.R
+import cc.galaxnet.novascale.core.TailnetBackend
+import cc.galaxnet.novascale.core.TailnetDestination
+import cc.galaxnet.novascale.core.TerminalRenderSnapshot
+import cc.galaxnet.novascale.nativecore.NativeSession
+import cc.galaxnet.novascale.nativecore.NativeTerminalTheme
+import cc.galaxnet.novascale.remote.HostKeyPrompt
+import cc.galaxnet.novascale.remote.KnownHostStore
+import cc.galaxnet.novascale.remote.RemoteConnectionConfig
+import cc.galaxnet.novascale.ui.UiText
+import cc.galaxnet.novascale.ui.asUiText
+import cc.galaxnet.novascale.ui.uiText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+internal data class TerminalConnectionState(
+    val status: UiText = uiText(R.string.terminal_status_preparing),
+    val busy: Boolean = false,
+    val connected: Boolean = false,
+    val snapshot: TerminalRenderSnapshot? = null,
+    val hostKeyPrompt: HostKeyPrompt? = null,
+)
+
+internal interface TerminalRuntime : AutoCloseable {
+    val clipboardWrites: kotlinx.coroutines.flow.Flow<String> get() = kotlinx.coroutines.flow.emptyFlow()
+    val state: StateFlow<TerminalConnectionState>
+
+    fun connect(config: RemoteConnectionConfig)
+
+    fun connectIfNeeded(config: RemoteConnectionConfig)
+
+    fun acceptHostKey()
+
+    fun rejectHostKey()
+
+    fun send(bytes: ByteArray)
+
+    fun resize(newColumns: Int, newRows: Int)
+
+    fun scroll(rows: Int)
+
+    fun applyTheme(theme: NativeTerminalTheme)
+
+    fun disconnect()
+}
+
+internal class TerminalConnectionController(
+    context: Context,
+    private val tailnet: TailnetBackend,
+    private val scope: CoroutineScope,
+) : TerminalRuntime {
+    private val clipboardEvents = kotlinx.coroutines.flow.MutableSharedFlow<String>(extraBufferCapacity = 1)
+    override val clipboardWrites: kotlinx.coroutines.flow.Flow<String> = clipboardEvents
+    private val knownHosts = KnownHostStore(context)
+    private val mutableState = MutableStateFlow(TerminalConnectionState())
+    override val state: StateFlow<TerminalConnectionState> = mutableState.asStateFlow()
+
+    private var nativeSession: NativeSession? = null
+    private var connectJob: Job? = null
+    private var eventJob: Job? = null
+    private var lastConfig: RemoteConnectionConfig? = null
+    private var columns = 80
+    private var rows = 24
+    private var terminalTheme: NativeTerminalTheme? = null
+
+    override fun connect(config: RemoteConnectionConfig) {
+        config.validate()?.let { error ->
+            mutableState.value = mutableState.value.copy(status = error)
+            return
+        }
+        lastConfig = config
+        connectJob?.cancel()
+        val job = scope.launch {
+            closeNative()
+            mutableState.value = TerminalConnectionState(
+                status = uiText(R.string.terminal_status_dialing, config.endpoint),
+                busy = true,
+            )
+            try {
+                val stream = tailnet.dial(TailnetDestination(config.host.trim(), config.portNumber))
+                val expected = knownHosts.fingerprint(config)
+                val session = withContext(Dispatchers.IO) {
+                    NativeSession.startSsh(
+                        stream.fd,
+                        config.request(expected, columns, rows, terminalTheme),
+                    )
+                }
+                nativeSession = session
+                // A preference change can race the dial/handshake. Re-send the
+                // latest palette after ownership is published so that change is
+                // never lost between request construction and session creation.
+                terminalTheme?.let { latest ->
+                    withContext(Dispatchers.IO) { session.setTerminalTheme(latest) }
+                }
+                mutableState.value = mutableState.value.copy(
+                    status = uiText(R.string.terminal_status_negotiating),
+                )
+                eventJob = scope.launch(Dispatchers.IO) { pollEvents(session) }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                mutableState.value = TerminalConnectionState(
+                    status = error.message?.asUiText()
+                        ?: uiText(R.string.terminal_status_start_failed),
+                )
+            }
+        }
+        connectJob = job
+        job.invokeOnCompletion {
+            if (connectJob === job) connectJob = null
+        }
+    }
+
+    override fun connectIfNeeded(config: RemoteConnectionConfig) {
+        if (nativeSession != null || connectJob?.isActive == true || mutableState.value.connected) return
+        connect(config)
+    }
+
+    override fun acceptHostKey() {
+        val config = lastConfig ?: return
+        val prompt = mutableState.value.hostKeyPrompt ?: return
+        knownHosts.trust(config, prompt.fingerprint)
+        connect(config)
+    }
+
+    override fun rejectHostKey() {
+        mutableState.value = mutableState.value.copy(
+            hostKeyPrompt = null,
+            busy = false,
+            connected = false,
+            status = uiText(R.string.host_key_not_trusted),
+        )
+        scope.launch { closeNative() }
+    }
+
+    override fun send(bytes: ByteArray) {
+        if (bytes.isEmpty()) return
+        scope.launch(Dispatchers.IO) { nativeSession?.sendInput(bytes) }
+    }
+
+    override fun resize(newColumns: Int, newRows: Int) {
+        columns = newColumns.coerceIn(20, 500)
+        rows = newRows.coerceIn(5, 300)
+        scope.launch(Dispatchers.IO) { nativeSession?.resize(columns, rows) }
+    }
+
+    override fun scroll(rows: Int) {
+        if (rows == 0) return
+        scope.launch(Dispatchers.IO) { nativeSession?.scrollTerminal(rows.coerceIn(-300, 300)) }
+    }
+
+    override fun applyTheme(theme: NativeTerminalTheme) {
+        terminalTheme = theme
+        scope.launch(Dispatchers.IO) { nativeSession?.setTerminalTheme(theme) }
+    }
+
+    override fun disconnect() {
+        scope.launch {
+            closeNative()
+            mutableState.value = TerminalConnectionState(
+                status = uiText(R.string.terminal_status_disconnected),
+            )
+        }
+    }
+
+    private suspend fun pollEvents(session: NativeSession) {
+        while (scope.isActive && nativeSession === session) {
+            val event = session.pollEvent(750) ?: continue
+            when (event.type) {
+                "authenticated" -> update {
+                    it.copy(status = uiText(R.string.terminal_status_authenticated))
+                }
+                "ready" -> {
+                    val snapshot = runCatching { session.terminalSnapshot() }.getOrNull()
+                    update {
+                        it.copy(
+                            status = uiText(R.string.status_connected),
+                            busy = false,
+                            connected = true,
+                            snapshot = snapshot,
+                        )
+                    }
+                }
+                "clipboard_write" -> {
+                    event.payload?.optString("text")?.takeIf { it.isNotEmpty() && it.length <= 1024 * 1024 }?.let { clipboardEvents.tryEmit(it) }
+                }
+                "snapshot_changed" -> {
+                    val snapshot = runCatching { session.terminalSnapshot() }.getOrNull() ?: continue
+                    update { it.copy(snapshot = snapshot) }
+                }
+                "host_key_unknown", "host_key_changed" -> {
+                    val fingerprint = event.fingerprint ?: continue
+                    update {
+                        it.copy(
+                            status = if (event.type == "host_key_changed") {
+                                uiText(R.string.host_key_changed_warning)
+                            } else {
+                                uiText(R.string.host_key_confirmation)
+                            },
+                            busy = false,
+                            connected = false,
+                            hostKeyPrompt = HostKeyPrompt(
+                                fingerprint = fingerprint,
+                                algorithm = event.algorithm,
+                                expectedFingerprint = event.expectedFingerprint,
+                            ),
+                        )
+                    }
+                }
+                "error" -> update {
+                    it.copy(
+                        status = event.message?.asUiText()
+                            ?: uiText(R.string.terminal_status_failed),
+                        busy = false,
+                        connected = false,
+                    )
+                }
+                "closed", "event_stream_closed" -> {
+                    update {
+                        it.copy(
+                            status = event.exitStatus?.let {
+                                uiText(R.string.terminal_status_exited, it)
+                            } ?: uiText(R.string.terminal_status_closed),
+                            busy = false,
+                            connected = false,
+                        )
+                    }
+                    if (nativeSession === session) nativeSession = null
+                    break
+                }
+            }
+        }
+    }
+
+    private suspend fun closeNative() {
+        eventJob?.cancel()
+        eventJob = null
+        val session = nativeSession
+        nativeSession = null
+        withContext(Dispatchers.IO) { runCatching { session?.close() } }
+    }
+
+    private suspend fun update(block: (TerminalConnectionState) -> TerminalConnectionState) {
+        withContext(Dispatchers.Main.immediate) {
+            mutableState.value = block(mutableState.value)
+        }
+    }
+
+    override fun close() {
+        connectJob?.cancel()
+        connectJob = null
+        eventJob?.cancel()
+        eventJob = null
+        val session = nativeSession
+        nativeSession = null
+        mutableState.value = mutableState.value.copy(
+            status = uiText(R.string.terminal_status_disconnected),
+            busy = false,
+            connected = false,
+        )
+        scope.launch(Dispatchers.IO) { runCatching { session?.close() } }
+    }
+}

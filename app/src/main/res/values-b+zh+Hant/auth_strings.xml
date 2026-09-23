@@ -1,0 +1,17 @@
+<resources>
+    <string name="auth_key_failed">驗證失敗。請檢查金鑰及其有效期、控制伺服器和網路連線。</string>
+    <string name="auth_waiting_approval">等待裝置核准</string>
+    <string name="auth_connecting">正在連接您的 Tailnet</string>
+    <string name="auth_approval_description">請在控制伺服器的管理主控台核准此裝置。就緒後 NovaScale 將自動繼續。</string>
+    <string name="auth_browser_wait_description">請在瀏覽器中完成登入。我們正在等待 Tailscale 確認連線，就緒後將顯示您的主機。</string>
+    <string name="auth_key_wait_description">金鑰已提交。正在等待 Tailnet 連線，可能還需要核准裝置。</string>
+    <string name="auth_wait_slow">等待時間較長。請檢查網路及待核准的裝置，或返回設定重試。</string>
+    <string name="auth_reopen_browser">重新開啟登入瀏覽器</string>
+    <string name="auth_back_setup">返回設定</string>
+    <string name="auth_browser_method">瀏覽器登入</string>
+    <string name="auth_key_method">驗證金鑰</string>
+    <string name="auth_key_description">使用 Tailscale 或自訂控制伺服器的驗證金鑰。NovaScale 僅在此次登入中使用金鑰，不會儲存。</string>
+    <string name="auth_key_connect">使用驗證金鑰連線</string>
+    <string name="auth_reset_server">使用預設 Tailscale 伺服器</string>
+    <string name="auth_clipboard_empty">沒有可貼上的文字。</string>
+</resources>

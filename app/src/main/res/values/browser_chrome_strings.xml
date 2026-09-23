@@ -1,0 +1,19 @@
+<resources>
+    <string name="host_web_access">Web Access</string>
+    <string name="host_diagnostics">Diagnostics</string>
+    <string name="browser_address">URL</string>
+    <string name="browser_ready">Ready to browse</string>
+    <string name="browser_welcome">Open dashboards, services, and websites on your tailnet or the internet. Choose an address, then tap Go.</string>
+    <string name="browser_https">HTTPS connection</string>
+    <string name="browser_http">HTTP connection</string>
+    <string name="browser_edit_address">Edit address</string>
+    <string name="browser_forward">Forward</string>
+    <string name="browser_start_page">Start page</string>
+    <string name="browser_actions">Browser actions</string>
+    <string name="browser_copy_link">Copy link</string>
+    <string name="browser_share">Share link</string>
+    <string name="browser_mobile">Request mobile site</string>
+    <string name="browser_desktop">Request desktop site</string>
+    <string name="browser_close">Close page</string>
+    <string name="browser_exit_video">Exit fullscreen video</string>
+</resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_browser">Browser</string>
+    <string name="proxy_title">Local Proxy</string>
+    <string name="proxy_description">Use this authenticated proxy with apps on this phone. NovaScale’s browser uses it automatically. Tailnet and internet connections share the same node.</string>
+    <string name="proxy_enabled">Start proxy automatically</string>
+    <string name="proxy_running">Local proxy running</string>
+    <string name="proxy_stopped">Proxy stopped. Connect the tailnet to start.</string>
+    <string name="proxy_failed">Unable to start the local proxy.</string>
+    <string name="proxy_retry">Retry</string>
+    <string name="proxy_protocols">SOCKS5 and HTTP/CONNECT · Authentication required</string>
+    <string name="proxy_username">Username: %1$s</string>
+    <string name="proxy_password">Proxy password</string>
+    <string name="proxy_show_password">Show password</string>
+    <string name="proxy_hide_password">Hide password</string>
+    <string name="proxy_copy_password">Copy password</string>
+    <string name="proxy_preferred_port">Preferred port</string>
+    <string name="proxy_port_help">Leave blank for automatic. Otherwise enter 1–65535.</string>
+    <string name="proxy_settings_error">Could not save. Check the port and try again.</string>
+    <string name="proxy_apply">Apply port</string>
+    <string name="proxy_apply_description">Changing the port reconnects the proxy and interrupts active connections.</string>
+    <string name="proxy_background">Keep proxy running in background</string>
+    <string name="proxy_background_description">Shows an ongoing notification with a Stop action. Android may still interrupt connections during power saving or process shutdown.</string>
+    <string name="proxy_regenerate">Regenerate password</string>
+    <string name="proxy_regenerate_description">Active proxy connections will close. Update the password in other apps afterward.</string>
+    <string name="proxy_cancel">Cancel</string>
+    <string name="proxy_notifications">Local proxy</string>
+    <string name="proxy_port_fallback_title">Proxy port unavailable</string>
+    <string name="proxy_port_fallback">Port %1$d is unavailable. Using %2$s instead.</string>
+    <string name="proxy_settings_summary">Connection details, authentication, and preferred port</string>
+    <string name="browser_go">Go</string>
+    <string name="browser_proxy_required">Connect the tailnet and enable Local Proxy in Settings to browse.</string>
+    <string name="action_stop">Stop</string>
+    <string name="browser_start_hint">Enter a URL, then tap Go to open it.</string>
+</resources>

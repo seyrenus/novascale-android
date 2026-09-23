@@ -1,0 +1,290 @@
+# NovaScale Android Design System
+
+## Goal
+
+NovaScale should feel like the same product on iOS and Android. The iOS 1.6
+application is the interaction reference; Android uses the owner-approved monospace and high-contrast neutral visual style while keeping native
+Compose navigation, typography, touch behavior, accessibility, and system
+integration.
+
+This document covers the focused Android release only: tailnet login and host
+discovery, host detail, SSH setup, Terminal, Files, Settings, and open-source
+notices. Features outside the Android MVP are not reproduced merely because
+they exist on iOS.
+
+## Product principles
+
+1. **Host first.** Terminal, Files, and SSH settings always belong to a selected
+   host. Home shows hosts; host detail shows the available actions.
+2. **Configuration is a gate, not a launch screen.** Selecting Terminal or Files
+   opens SSH Settings only when the host has no usable saved profile. Saving
+   continues the pending action. A configured host goes directly to the tool.
+3. **Sessions are immersive.** Connection progress, host-key verification,
+   reconnect, tabs, terminal content, and the accessory keyboard belong to one
+   terminal surface. Generic SSH form fields do not remain in the normal
+   terminal path.
+4. **Compact, calm surfaces.** Use grouped rows and restrained borders instead
+   of a stack of large elevated cards. Technical values are monospaced and
+   secondary metadata is quiet.
+5. **Semantic color only.** Brand color indicates a primary action or selection;
+   green, red, amber, and blue are reserved for status and feature semantics.
+6. **Native Android behavior.** Minimum 48 dp touch targets, predictive/system
+   back compatibility, scalable text, TalkBack labels, hardware keyboard input,
+   and IME-safe layout take precedence over pixel-copying UIKit.
+
+## Foundations
+
+The semantic roles follow iOS. The palette and interface typography were revised
+for Android at the owner’s request on 2026-09-22. `NovaDesignSystem.kt` is the Android source of truth.
+
+### Color roles
+
+| Role | Light | Dark | Use |
+| --- | --- | --- | --- |
+| Primary | `#3656C9` | `#99B4FF` | Primary actions, selection, Terminal icon |
+| Primary shade | `#233EC7` | `#3B57E3` | Pressed/emphasized brand surface |
+| Accent | `#52E099` | `#1C5C38` | Supporting accent only |
+| Background | `#F3F4F6` | `#0B0F14` | Screen canvas |
+| Surface | `#FFFFFF` | `#151B23` | Grouped rows and cards |
+| Text primary | `#111827` | `#F3F6FA` | Primary content |
+| Text secondary | `#465363` | `#B8C3D1` | Metadata and helper content |
+| Border subtle | `#CBD2DC` | `#354150` | Flat surface separation |
+| Connected | `#087F5B` | `#4DD89C` | Online/success state |
+| Disconnected | `#D9262C` | `#E8595E` | Offline/error/destructive state |
+| Warning | `#A35400` | `#FFB454` | Waiting or attention state |
+| Info | `#176DA5` | `#569ED2` | Informational state |
+| File | `#956600` | `#E4BE25` | Files action |
+
+Primary text contrast against the main canvas is 16.12:1 in light mode and
+17.73:1 in dark mode. Secondary text against card surfaces is 7.84:1 and 9.70:1.
+Material surface-container roles are neutral too, preventing default lavender
+fills from reappearing in browser controls and dialogs.
+
+### Spacing and geometry
+
+- Base spacing scale: 2, 4, 8, 16, 24, 32, and 48 dp.
+- Screen margin: 16 dp.
+- Standard row gap: 12 dp; grouped row padding: 16 dp horizontal and 12 dp vertical.
+- Corners: 8 dp controls, 12 dp cards, 16 dp prominent groups, 24 dp large content cards.
+- Touch targets: at least 48 dp on Android.
+- Status dots: 8 dp standard, 6 dp compact.
+- Host rows: at least 64 dp high.
+
+### Typography
+
+- Use bundled JetBrains Mono for every Material typography role and respect user
+  font scaling. Android fallback covers CJK and other missing glyphs. Terminal
+  preferences, editors, and website typography remain independently controlled.
+- Use semibold/bold sparingly for screen, section, and row titles.
+- Use the system monospace family for IP addresses, hostnames, ports,
+  fingerprints, paths, and terminal content.
+- Terminal defaults to 16 sp on compact Android screens. Pinch zoom remains
+  available from 8 to 40 sp; settings persistence is a follow-up slice.
+
+## Component patterns
+
+### App shell
+
+- Android has Home, Browser, and Settings. While a webpage is open, browser
+  controls replace the application bars; Close/Home returns to the start page.
+- A destination pushed from either tab uses an icon-only back affordance and a
+  compact title. The bottom bar remains the stable top-level anchor but should
+  not compete visually with a full-screen terminal.
+- Use platform icons, never text glyphs such as `⌂` and `⚙`, for app navigation.
+- Selected bottom-navigation icons and labels use Primary without a same-hue
+  selection pill. Unselected icons and labels use Text secondary.
+
+### Icon color treatment
+
+- Ordinary action, navigation, status, file, and empty-state symbols are drawn
+  directly on the containing surface. A colored outline must not be placed on a
+  translucent fill made from the same color.
+- Semantic color belongs to the symbol: Primary for Terminal and general
+  actions, File for folders/files, Info for Ping and previews, Connected for
+  successful state, and Disconnected for destructive actions.
+- Filled icon buttons are reserved for a strong primary action and must use a
+  contrasting on-fill foreground, such as the white Play symbol on Primary.
+- Host platform marks are the deliberate exception: their white artwork sits
+  on a solid or gradient platform tile so operating-system identity remains
+  recognizable at a glance.
+- Terminal accessory icons use transparent key surfaces, a neutral
+  theme-derived border, and separate semantic foregrounds.
+
+### Home and host rows
+
+- Home leads with the `Hosts` title and a compact tailnet status row/chip.
+- Tailnet hosts default to `Online only`; the chip changes only presentation
+  state and never replaces the application-owned IPN peer snapshot.
+- Each host row contains a platform tile, host name, online dot, one best
+  address, optional OS metadata, and a trailing chevron.
+- The whole row opens host detail. A direct Terminal shortcut can be added only
+  when its touch target and session count behavior match the iOS reference.
+
+### Host detail
+
+- Keep the host summary above a responsive action-card grid (144 dp target
+  minimum width, 120 dp minimum height, wrapping text at larger font sizes).
+- Actions: Terminal (SSH), Web Access (HTTP/HTTPS), Files (SFTP), Ping (Diagnostics).
+- SSH settings is an accessible toolbar action, not a separate settings group.
+- Web Access prefills the selected host and lets the user choose the URL/port and
+  press Go. Port presets never trigger unsolicited navigation.
+
+### SSH settings
+
+- Show host information as read-only metadata.
+- Editable fields are Port, Username, and authentication method, followed only
+  by fields required for that method.
+- Save is the primary action. When settings were opened as a prerequisite,
+  successful save immediately continues to Terminal or Files.
+- Passwords, private keys, and passphrases keep the existing Keystore-backed
+  encrypted storage boundary.
+
+### Terminal
+
+- Open and connect immediately from a configured host.
+- During dialing and SSH negotiation, show an immersive terminal-colored loading
+  surface with endpoint and status. Do not show editable credentials.
+- On recoverable failure, show Retry and SSH Settings actions.
+- Connected layout: compact tab strip, terminal canvas, and an accessory row
+  attached above the IME.
+- The header shows detach/back, host status, add-tab when applicable, and one
+  overflow action. New-window and destructive close actions do not compete
+  with terminal content; closing a live tab or group requires confirmation.
+- Multiple tabs use stable user-visible names. Tap selects; long-press opens
+  rename and close actions without permanently spending tab width on close
+  icons.
+- Baseline accessory keys: Esc, Ctl, Alt, Tab, arrows, paste, and a toggleable
+  symbol row. Ctl and Alt are one-shot modifiers and visibly selected. The
+  keyboard/accessory-hide control stays fixed at the trailing edge while the
+  terminal keys scroll independently.
+- Terminal chrome follows the active terminal palette; controls use transparent
+  or subtly tinted surfaces so content remains dominant.
+
+### Files
+
+- Files uses the same saved-profile gate and strict known-host policy as
+  Terminal.
+- The browser uses compact tappable breadcrumbs for every ancestor, keeps
+  in-folder search collapsed until requested, and presents item actions in a
+  native bottom sheet.
+- Preview and editing are immersive. A dirty editor cannot be left without an
+  explicit Save, Discard, or Cancel decision.
+- Directory rows use folder/file semantics, monospaced paths, and native Android
+  file-picker integration for import/export.
+
+## Feature fidelity backlog
+
+| Slice | iOS reference behavior | Android acceptance test |
+| --- | --- | --- |
+| Shell/Home | Compact host cards, platform/status identity, restrained grouping | API 28/36 light and dark; large font; TalkBack order |
+| Tailnet path | Online-only host default; ten-round Ping route and latency detail | Direct, DERP, peer relay, timeout, retry cancellation |
+| SSH continuation | Missing config asks once; saved config continues pending action | New host → Settings → Save → Terminal; configured host → Terminal directly |
+| Terminal foundation | Full-screen session, readable type, tabs, accessory keys | Real Tailscale SSH; password; key; rotation; IME; hardware keyboard |
+| Terminal polish | Themes, saved font, selection, URLs, scrollback, session detach | Five themes; copy/paste; `tmux`, `vim`, Unicode/CJK/emoji stress |
+| Files | Native grouped browser/editor using shared SSH policy | Browse/edit, host-key mismatch, interrupted transfer, SAF import/export |
+| Settings/legal | Grouped native settings and source/notices screens | Dark mode, backup exclusions, dependency notices, source tag link |
+
+## Review rule
+
+Every UI slice should be reviewed side by side with the corresponding iOS
+screen and against Android accessibility/system conventions. “Same feel” means
+matching hierarchy, density, color semantics, state transitions, and quality;
+it does not mean reproducing an Apple-only control when Android has a stronger
+native convention.
+
+### Browser
+
+- Use a ready-to-browse start page with URL input, IME Go, and host port presets.
+- Keep page content above compact bottom controls: address/edit, back, forward,
+  reload/stop, tab switcher, and a menu for start page, link copy/share, desktop mode, and close.
+- Address editing uses a keyboard-aware sheet. WebView stays clipped beneath UI.
+- Support WebView fullscreen video with an accessible exit and Android Back;
+  release the custom view on disposal/background. TLS and authenticated proxy
+  requirements remain unchanged.
+- Default URL drafts and schemeless input to HTTP; preserve explicitly entered HTTPS.
+  Host Web Access opens a new draft using the short MagicDNS node name and waits for Go.
+- The tab sheet supports creating, selecting and closing tabs. Switching retains the
+  live WebView and navigation history; inactive views pause. App navigation is hidden by default while viewing a page; Show/Hide app navigation
+  sits below Close tab in the More menu and toggles it without leaving the page.
+  Every More-menu item has a semantic leading icon. The tab switcher is a plain icon, without a
+  notification badge; its accessible label and sheet expose the tab count. Switching app sections
+  detaches the browser UI but retains its pages, DOM, history and scroll state.
+  Backgrounding the app or replacing the proxy destroys views and requires Go
+  before loading again. Tab metadata is memory-only; closing the last tab creates
+  an uncounted landing-page draft. A fresh browser starts with no open tabs;
+  count labels use localized singular/plural forms. Bookmarks/history persistence and downloads remain separate work.
+- Settings places App language below Files under Misc: System default, English, Simplified Chinese,
+  Traditional Chinese. Android 13+ shares the system app-language setting; older
+  versions use DataStore and a localized UI context without restarting sessions.
+
+### Launcher and launch screen
+
+- Preserve the NovaScale browser-and-terminal mark. Android owns its vector
+  rendition: light sky-blue background, translucent rounded browser pane,
+  raised terminal pane, white/cyan edge highlights and restrained shadows.
+- Use separate 108 dp adaptive foreground/background layers rather than a
+  flattened square PNG. Keep the recognizable mark inside the central safe
+  area; the launcher supplies its preferred mask. API 33+ includes a dedicated
+  monochrome mark for themed icons.
+- The launch screen uses only the transparent foreground on graphite `#0B0F14`,
+  with matching system bars. Never display the opaque square launcher background
+  here. Android 12+ receives the vector directly so the system can scale/mask it;
+  older Android uses a centered 288 dp starting-window drawable. MainActivity
+  switches to the ordinary app theme before creating its content.
+- Native vector resources are the editable source; no macOS export or generated
+  raster assets are required. The iOS Icon Composer files remain reference-only.
+
+
+### System and keyboard insets
+
+- MainActivity opts into edge-to-edge consistently across Android versions.
+  The custom top bar consumes top/horizontal safe-drawing insets before its
+  56 dp content height; Scaffold content consumes the provided padding so child
+  keyboard insets do not double-count the app or system navigation areas.
+- SSH settings applies IME padding outside its scrolling form. Focusing a
+  password/passphrase must relocate the complete field above the keyboard;
+  the Save action remains reachable by scrolling.
+
+
+### Compact cards and main navigation
+
+- Host action cards reserve the same two-line title slot and one-line subtitle
+  slot, and fill their row height. Wrapped labels must not make an individual
+  card taller than its neighbors.
+- Main navigation uses a 64 dp content height (previously 80 dp), plus Android's
+  navigation/gesture inset. Keep labels on one line and preserve touch targets.
+
+
+### Settings menu alignment
+
+- Every Settings menu row uses NovaActionRow, including language selection and
+  the background-session switch. Keep the same horizontal padding, fixed icon
+  slot, 20 dp symbol size, and text column across sections. Navigation rows end
+  in a chevron; the background-session row retains its switch.
+- Use semantic icons for proxy routing, touch gestures, background sessions and
+  language. Allow the longer switch title/description to wrap without shifting
+  its leading icon/text alignment. Status summaries and form inputs are distinct
+  from menu rows.
+
+### Tailnet details and versions
+
+- Settings has one Tailnet details menu entry instead of inline status,
+  control-server and logout rows. Details presents live status, local node name,
+  DNS name, all tailnet addresses and its account. Values wrap and can be copied;
+  an absent user profile is explicitly unavailable, never inferred from peers.
+- Control server and logout/connect actions live inside Tailnet details and use
+  the shared icon/menu layout. Back from Control server returns to details.
+- About includes Version, showing app version/build from BuildConfig and the
+  upstream Tailscale version derived at build time from the pinned Go module.
+
+Home uses Hosts/Sessions inner tabs. Connection details live in the top-right toolbar, using a progress indicator while starting and a semantic status tint with an accessible connection label. Signed-out Hosts provides a login introduction. Live peer counts use “Online: N Nodes”; there is no manual Refresh button.
+
+First-run onboarding uses a soft accent wash, large feature symbols, readable monospace headings, page indicators, and fixed bottom controls. Content scrolls independently on compact screens. Completion is stored in DataStore; authentication remains an explicit action.
+
+Browser address editing places Clear above the field at the right. Clear produces an empty, focused field without changing the loaded page. More-menu and Settings leading symbols use the primary accent for contrast.
+
+Onboarding icons now use a solid blue 80 dp tile, centered above the heading, with a white 40 dp symbol in both themes. The promotional footer is removed. Debug builds provide a replay action in More.
+
+Host Web Access uses a bottom sheet with an editable URL, quick ports, and an explicit Open in browser action. The Home tailnet status toolbar button opens a details sheet so dismissing it preserves the current host pane.
+
+Tailnet authentication replaces the setup form with a dedicated waiting view while sign-in completes. Browser sign-in offers Reopen sign-in browser; both methods offer Back to setup and a delayed troubleshooting hint. Controller-required device approval has its own heading and instructions. The setup form offers Browser sign-in and Auth key chips; key entry is masked, not saved, and cleared on submission.

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Windows mark from Devicon, MIT. See THIRD_PARTY_NOTICES.md. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="128"
+    android:viewportHeight="128">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M126,1.637 L59,11.471 L59,61.302 L126,60.768zM1.647,66.709 L1.65,109.113 L52.441,116.096 L52.401,67.039zM58.467,67.389 L58.561,116.854 L125.937,126.363 L125.953,67.5zM1.61,19.297 L1.657,61.68 L52.448,61.391 L52.425,12.375z" />
+</vector>

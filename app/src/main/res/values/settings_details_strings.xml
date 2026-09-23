@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tailnet_details">Tailnet details</string>
+    <string name="detail_status">Connection status</string>
+    <string name="detail_node_name">This device</string>
+    <string name="detail_dns_name">DNS name</string>
+    <string name="detail_addresses">Tailnet IP addresses</string>
+    <string name="detail_login_user">Signed-in user</string>
+    <string name="detail_unavailable">Not available</string>
+    <string name="detail_no_user">No user profile available for this node</string>
+    <string name="detail_connect_hint">Connect to see this device’s tailnet identity.</string>
+    <string name="versions_title">Version</string>
+    <string name="version_app">NovaScale version</string>
+    <string name="version_build">Build number</string>
+    <string name="version_tailscale">Tailscale upstream</string>
+</resources>

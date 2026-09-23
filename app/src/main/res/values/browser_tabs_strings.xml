@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="browser_new_tab">New tab</string>
+    <string name="app_language">App language</string>
+    <string name="language_system">System default</string>
+    <string name="browser_close_tab">Close tab</string>
+    <string name="section_misc">Misc</string>
+    <plurals name="browser_tab_count">
+        <item quantity="one">%1$d tab</item>
+        <item quantity="other">%1$d tabs</item>
+    </plurals>
+    <string name="browser_show_app_navigation">Show app navigation</string>
+    <string name="browser_hide_app_navigation">Hide app navigation</string>
+</resources>

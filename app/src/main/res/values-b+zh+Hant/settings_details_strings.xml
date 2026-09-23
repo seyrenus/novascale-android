@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tailnet_details">Tailnet 詳情</string>
+    <string name="detail_status">連線狀態</string>
+    <string name="detail_node_name">本機名稱</string>
+    <string name="detail_dns_name">DNS 名稱</string>
+    <string name="detail_addresses">Tailnet IP 位址</string>
+    <string name="detail_login_user">目前登入使用者</string>
+    <string name="detail_unavailable">暫無</string>
+    <string name="detail_no_user">此節點沒有可用的使用者資料</string>
+    <string name="detail_connect_hint">連線後可查看本機的 Tailnet 身分。</string>
+    <string name="versions_title">版本</string>
+    <string name="version_app">NovaScale 版本</string>
+    <string name="version_build">建置編號</string>
+    <string name="version_tailscale">Tailscale 上游版本</string>
+</resources>

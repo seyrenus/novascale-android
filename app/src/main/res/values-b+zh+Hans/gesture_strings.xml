@@ -1,0 +1,12 @@
+<resources>
+    <string name="terminal_gestures">终端手势</string>
+    <string name="terminal_gestures_summary">触控、鼠标、选择和缩放</string>
+    <string name="gestures_modes">远程应用请求鼠标报告时自动启用。在 tmux 中使用“set -g mouse on”开启。</string>
+    <string name="gestures_tap">轻点：聚焦终端并显示键盘。在支持鼠标的应用中，同时在触点所在单元格发送左键点击。</string>
+    <string name="gestures_swipe">上下滑动：向远程应用发送鼠标滚轮事件。关闭鼠标报告时，滚动终端历史。</string>
+    <string name="gestures_drag">按住后拖动：按住鼠标左键，在远程应用中拖动或选择。抬起手指即松开。</string>
+    <string name="gestures_selection">双击：在本地选择单词并打开 Android 复制菜单。关闭鼠标报告时，长按也可选择文本。</string>
+    <string name="gestures_pinch">双指捏合：调整终端字号，并结束正在进行的鼠标拖动。</string>
+    <string name="gestures_mouse">外接鼠标：支持左键、中键、右键、滚轮及应用请求的移动报告。按住 Shift 可改为本地滚动和选择。</string>
+    <string name="gestures_secondary">双指轻点或按住：鼠标右键。对于松开即关闭的菜单（如 tmux），保持双指按住，通过键盘选择菜单项，然后抬起手指。</string>
+</resources>

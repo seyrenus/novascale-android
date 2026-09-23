@@ -1,0 +1,17 @@
+<resources>
+    <string name="auth_key_failed">Authentication failed. Check the key, its expiry, your control server, and the connection.</string>
+    <string name="auth_waiting_approval">Waiting for device approval</string>
+    <string name="auth_connecting">Connecting to your tailnet</string>
+    <string name="auth_approval_description">Approve this device in your control server’s admin console. NovaScale will continue when it is ready.</string>
+    <string name="auth_browser_wait_description">Finish signing in in your browser. We are waiting for Tailscale to confirm the connection and will open your hosts when ready.</string>
+    <string name="auth_key_wait_description">Your key has been submitted. Waiting for the tailnet connection; device approval may also be required.</string>
+    <string name="auth_wait_slow">Taking longer than expected. Check your connection and any pending device approval, or return to setup to try again.</string>
+    <string name="auth_reopen_browser">Reopen sign-in browser</string>
+    <string name="auth_back_setup">Back to setup</string>
+    <string name="auth_browser_method">Browser sign-in</string>
+    <string name="auth_key_method">Auth key</string>
+    <string name="auth_key_description">Use a Tailscale or custom control-server auth key. The key is used once here and is not saved by NovaScale.</string>
+    <string name="auth_key_connect">Connect with auth key</string>
+    <string name="auth_reset_server">Use default Tailscale server</string>
+    <string name="auth_clipboard_empty">No text available to paste.</string>
+</resources>

@@ -1,0 +1,19 @@
+<resources>
+    <string name="host_web_access">网页访问</string>
+    <string name="host_diagnostics">网络诊断</string>
+    <string name="browser_address">网址</string>
+    <string name="browser_ready">准备浏览</string>
+    <string name="browser_welcome">访问 Tailnet 或互联网上的面板、服务和网站。输入地址，然后点击前往。</string>
+    <string name="browser_https">HTTPS 连接</string>
+    <string name="browser_http">HTTP 连接</string>
+    <string name="browser_edit_address">编辑地址</string>
+    <string name="browser_forward">前进</string>
+    <string name="browser_start_page">起始页</string>
+    <string name="browser_actions">浏览器操作</string>
+    <string name="browser_copy_link">复制链接</string>
+    <string name="browser_share">分享链接</string>
+    <string name="browser_mobile">请求移动版网站</string>
+    <string name="browser_desktop">请求桌面版网站</string>
+    <string name="browser_close">关闭页面</string>
+    <string name="browser_exit_video">退出全屏视频</string>
+</resources>
