@@ -6,7 +6,7 @@ This repository contains the Android application and its build instructions. The
 
 ## Release status
 
-NovaScale 1.0.0 (version code 1) is [available on Google Play](https://play.google.com/store/apps/details?id=cc.galaxnet.novascale). The `v1.0.0-play.1` tag identifies the source for that binary. Store submission records and signing credentials live in a separate private workspace.
+NovaScale 1.0.0 (version code 1) is [available on Google Play](https://play.google.com/store/apps/details?id=cc.galaxnet.novascale). The [`v1.0.0-play.1` tag](https://github.com/GalaxNet-Ltd/novascale-android/tree/v1.0.0-play.1) identifies the source for that binary. Store submission records and signing credentials live in a separate private workspace.
 
 The Android application includes:
 
