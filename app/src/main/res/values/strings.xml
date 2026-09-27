@@ -212,6 +212,10 @@
     <string name="cd_detach_terminal">Detach terminal</string>
     <string name="cd_close_terminal">Close terminal session</string>
     <string name="cd_paste">Paste</string>
+    <string name="terminal_composer_open">Input</string>
+    <string name="terminal_composer_title">Text input</string>
+    <string name="terminal_composer_newline">Enter</string>
+    <string name="terminal_composer_send">Ctrl+Enter</string>
     <string name="cd_hide_keyboard">Hide keyboard and accessory</string>
     <string name="terminal_symbols_show">Symbols +</string>
     <string name="terminal_symbols_hide">Symbols −</string>

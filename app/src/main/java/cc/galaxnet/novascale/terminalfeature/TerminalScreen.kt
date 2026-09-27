@@ -15,6 +15,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,11 +60,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isCtrlPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
@@ -157,6 +170,8 @@ internal fun TerminalScreen(
     var tabPendingClose by remember { mutableStateOf<TerminalSessionTab?>(null) }
     var tabPendingRename by remember { mutableStateOf<TerminalSessionTab?>(null) }
     var renameValue by remember { mutableStateOf("") }
+    var composerOpen by remember(selectedTabId) { mutableStateOf(false) }
+    var composerText by remember(selectedTabId) { mutableStateOf(TextFieldValue()) }
     val addTerminalTab: () -> Unit = {
         group.addTab(connectImmediately = tailnetState is TailnetState.Running)
     }
@@ -169,10 +184,24 @@ internal fun TerminalScreen(
         resignTerminalInput()
         onExit()
     }
+    val closeComposer: () -> Unit = {
+        composerOpen = false
+        keyboardController?.hide()
+        terminalView?.let { view ->
+            view.post { view.requestTerminalInput(showSoftwareKeyboard = false) }
+        }
+    }
+    val submitComposer: () -> Unit = {
+        if (composerText.text.isNotEmpty() && state.connected) {
+            controller.send(terminalComposedInputSequence(composerText.text, state.snapshot?.mouseFlags ?: 0))
+            composerText = TextFieldValue()
+            closeComposer()
+        }
+    }
 
     TerminalSystemBars(chrome)
 
-    BackHandler(onBack = detachTerminal)
+    BackHandler(enabled = !composerOpen, onBack = detachTerminal)
 
     DisposableEffect(group) {
         val attachment = group.attachView(viewAttachmentId)
@@ -339,6 +368,48 @@ internal fun TerminalScreen(
             },
         )
     }
+    if (composerOpen) {
+        AlertDialog(
+            onDismissRequest = closeComposer,
+            title = { Text(stringResource(R.string.terminal_composer_title)) },
+            text = {
+                val composerFocus = remember { FocusRequester() }
+                val composerKeyboard = LocalSoftwareKeyboardController.current
+                LaunchedEffect(composerFocus) {
+                    composerFocus.requestFocus()
+                    composerKeyboard?.show()
+                }
+                OutlinedTextField(
+                    value = composerText,
+                    onValueChange = { composerText = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(composerFocus)
+                        .onPreviewKeyEvent { event ->
+                            if (event.type == KeyEventType.KeyDown && event.key == Key.Enter && event.isCtrlPressed) {
+                                submitComposer()
+                                true
+                            } else {
+                                false
+                            }
+                        },
+                    minLines = 4,
+                    maxLines = 8,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Default),
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = submitComposer, enabled = composerText.text.isNotEmpty() && state.connected) {
+                    Text(stringResource(R.string.terminal_composer_send))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { composerText = composerText.withNewlineAtSelection() }) {
+                    Text(stringResource(R.string.terminal_composer_newline))
+                }
+            },
+        )
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -467,6 +538,13 @@ internal fun TerminalScreen(
                     altActive = altActive,
                     onDetach = detachTerminal,
                     onCloseSession = { closeSessionRequested = true },
+                    onCompose = {
+                        terminalView?.releaseTerminalInput()
+                        controlActive = false
+                        altActive = false
+                        terminalView?.setOneShotModifiers(false, false)
+                        composerOpen = true
+                    },
                     onModifiersChanged = { control, alt ->
                         controlActive = control
                         altActive = alt
@@ -797,6 +875,7 @@ private fun TerminalAccessoryKeyboard(
     altActive: Boolean,
     onDetach: () -> Unit,
     onCloseSession: () -> Unit,
+    onCompose: () -> Unit,
     onModifiersChanged: (control: Boolean, alt: Boolean) -> Unit,
     onSend: (ByteArray) -> Unit,
     onPaste: () -> Unit,
@@ -852,6 +931,7 @@ private fun TerminalAccessoryKeyboard(
                         onClick = onCloseSession,
                     )
                     TerminalAccessorySeparator(colors)
+                    TerminalKey(colors, stringResource(R.string.terminal_composer_open), onClick = onCompose)
                     TerminalKey(colors, "Esc") { send("\u001b") }
                     TerminalKey(colors, "Ctl", selected = controlActive) {
                         onKeepTerminalFocus()
@@ -1012,6 +1092,19 @@ internal fun terminalAccessorySequence(
         value.toByteArray(Charsets.UTF_8)
     }
     return if (alt) byteArrayOf(0x1b) + payload else payload
+}
+
+private fun TextFieldValue.withNewlineAtSelection(): TextFieldValue {
+    val start = minOf(selection.start, selection.end)
+    val end = maxOf(selection.start, selection.end)
+    return TextFieldValue(text.replaceRange(start, end, "\n"), TextRange(start + 1))
+}
+
+private fun terminalComposedInputSequence(text: String, mouseFlags: Int): ByteArray {
+    val normalized = text.replace("\r\n", "\n").replace('\r', '\n').replace('\n', '\r')
+    // Paste multiline text as one unit when the remote terminal enables bracketed paste.
+    val payload = if (mouseFlags and 256 != 0) "\u001b[200~$normalized\u001b[201~" else normalized
+    return "$payload\r".toByteArray(Charsets.UTF_8)
 }
 
 private val TerminalSymbols = listOf(

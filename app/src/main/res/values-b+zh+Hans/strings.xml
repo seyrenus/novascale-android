@@ -200,6 +200,10 @@
     <string name="cd_detach_terminal">分离终端</string>
     <string name="cd_close_terminal">关闭终端会话</string>
     <string name="cd_paste">粘贴</string>
+    <string name="terminal_composer_open">输入</string>
+    <string name="terminal_composer_title">文本输入</string>
+    <string name="terminal_composer_newline">回车</string>
+    <string name="terminal_composer_send">Ctrl+回车</string>
     <string name="cd_hide_keyboard">隐藏键盘和辅助栏</string>
     <string name="terminal_symbols_show">符号 +</string>
     <string name="terminal_symbols_hide">符号 −</string>
