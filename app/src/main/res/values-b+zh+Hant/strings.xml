@@ -196,6 +196,7 @@
     <string name="cd_detach_terminal_to_host">分離終端並返回主機</string>
     <string name="cd_new_terminal_tab">新增終端分頁</string>
     <string name="cd_terminal_actions">終端操作</string>
+    <string name="choose_input_method">選擇輸入法</string>
     <string name="cd_manage_tab">管理 %1$s</string>
     <string name="cd_detach_terminal">分離終端</string>
     <string name="cd_close_terminal">關閉終端工作階段</string>

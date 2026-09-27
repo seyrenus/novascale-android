@@ -208,6 +208,7 @@
     <string name="cd_detach_terminal_to_host">Detach terminal and return to host</string>
     <string name="cd_new_terminal_tab">New terminal tab</string>
     <string name="cd_terminal_actions">Terminal actions</string>
+    <string name="choose_input_method">Choose input method</string>
     <string name="cd_manage_tab">Manage %1$s</string>
     <string name="cd_detach_terminal">Detach terminal</string>
     <string name="cd_close_terminal">Close terminal session</string>

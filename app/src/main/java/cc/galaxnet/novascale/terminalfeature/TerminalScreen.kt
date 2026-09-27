@@ -9,6 +9,7 @@ package cc.galaxnet.novascale.terminalfeature
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -351,6 +352,14 @@ internal fun TerminalScreen(
             showAddTab = tabs.size == 1,
             onExit = detachTerminal,
             onAddTab = addTerminalTab,
+            onChooseInputMethod = {
+                terminalView?.let { view ->
+                    view.post {
+                        view.requestTerminalInput(showSoftwareKeyboard = false)
+                        view.context.getSystemService(InputMethodManager::class.java)?.showInputMethodPicker()
+                    }
+                }
+            },
             onOpenNewWindow = onOpenNewWindow,
             onDisconnect = { closeSessionRequested = true },
         )
@@ -556,6 +565,7 @@ private fun TerminalSessionHeader(
     showAddTab: Boolean,
     onExit: () -> Unit,
     onAddTab: () -> Unit,
+    onChooseInputMethod: () -> Unit,
     onOpenNewWindow: () -> Unit,
     onDisconnect: () -> Unit,
 ) {
@@ -618,6 +628,14 @@ private fun TerminalSessionHeader(
                     expanded = menuExpanded,
                     onDismissRequest = { menuExpanded = false },
                 ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.choose_input_method)) },
+                        enabled = connected,
+                        onClick = {
+                            menuExpanded = false
+                            onChooseInputMethod()
+                        },
+                    )
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.terminal_gestures)) },
                         onClick = { menuExpanded = false; showGestures = true },
