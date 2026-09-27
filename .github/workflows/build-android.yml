@@ -1,0 +1,54 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install Android build packages
+        run: sdkmanager --install "platforms;android-36" "build-tools;36.0.0" "ndk;28.2.13676358"
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: native/nova-tailnet-go/go.mod
+          cache-dependency-path: native/nova-tailnet-go/go.sum
+
+      - name: Set up Rust Android targets
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+          rustup target add aarch64-linux-android x86_64-linux-android
+
+      - name: Build debug APK
+        run: ./gradlew --no-daemon --max-workers=1 :app:assembleDebug
+
+      - name: Verify debug APK
+        run: ./scripts/verify-debug-apk.sh
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        with:
+          name: novascale-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

@@ -54,6 +54,13 @@ export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
 
 The installable APK is `app/build/outputs/apk/debug/app-debug.apk`.
 
+## GitHub Actions build
+
+The **Build Android APK** workflow runs on pushes to `main`. You can also start
+it from the repository's **Actions** tab with **Run workflow**. After the run
+succeeds, download the `novascale-debug-apk` artifact from its run page. It
+contains the installable debug APK (`app-debug.apk`).
+
 ## Release build inputs
 
 Development builds use version `0.1.0-dev`. A Play release requires an explicit
