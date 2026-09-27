@@ -196,7 +196,6 @@
     <string name="cd_detach_terminal_to_host">分离终端并返回主机</string>
     <string name="cd_new_terminal_tab">新建终端标签页</string>
     <string name="cd_terminal_actions">终端操作</string>
-    <string name="choose_input_method">选择输入法</string>
     <string name="cd_manage_tab">管理 %1$s</string>
     <string name="cd_detach_terminal">分离终端</string>
     <string name="cd_close_terminal">关闭终端会话</string>
